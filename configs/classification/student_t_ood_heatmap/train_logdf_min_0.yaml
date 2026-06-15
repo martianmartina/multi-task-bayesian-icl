@@ -1,0 +1,59 @@
+experiment_name: "multi_task_implicit_learner_logistic_student_t_heatmap_min_logdf0_var_mean_lr5e-3"
+project_name: "mt-icl-student_t-heatmap"
+accelerator: "auto"
+max_epochs: 100
+precision: 16
+devices: "auto"
+accumulate_grad_batches: 1
+
+data:
+  name: "logistic"
+  x_dim: 8
+  num_prior_tasks: 20
+  sequence_length: 50
+  num_train_samples: 10000000
+  num_val_samples: 5000
+  batch_size: 1024
+  num_workers: 6
+
+  distribution_names: ["student_t"]
+  student_t_df_list: [20.0855, 7.3891, 2.7183, 1.0]
+
+  w_mean: 0.0
+  w_std: 1.0
+  w_bank_dtype: "bfloat16"
+  w_mean_min: -8.0
+  w_mean_max: 8.0
+  x_mean: 0.0
+  x_std: 1.0
+
+  precompute: true
+
+model:
+  model_type: 'transformer'
+  x_dim: 8
+  num_prior_tasks: 20
+  d_model: 128
+  dropout: 0.0
+  learning_rate: 0.005
+  nhead: 8
+  num_encoder_layers: 8
+  dim_feedforward: 512
+  gru_hidden_dim: 128
+  gru_num_layers: 2
+  consistency_beta: 0.0
+  task_type: "classification"
+
+logger:
+  _target_: pytorch_lightning.loggers.WandbLogger
+  name: ${experiment_name}
+  project: ${project_name}
+  log_model: "all"
+
+checkpoint:
+  _target_: pytorch_lightning.callbacks.ModelCheckpoint
+  dirpath: "checkpoints/${experiment_name}"
+  filename: "best-model-{epoch:02d}-{val_loss:.2f}"
+  save_top_k: 3
+  monitor: "val_loss"
+  mode: "min"

@@ -1,0 +1,57 @@
+heatmap:
+  # easy hack for log(df) = [3, 2, 1, 0, -1, -2, -3]
+  df_grid: [20.0855, 7.3891, 2.7183, 1, 0.3679, 0.1353, 0.0497]
+
+  train_models:
+    - train_min_df: 3
+      checkpoint_path: "checkpoints/multi_task_implicit_learner_logistic_student_t_heatmap_min_logdf3/best-model-epoch=89-val_loss=0.53.ckpt"
+    - train_min_df: 2
+      checkpoint_path: "checkpoints/multi_task_implicit_learner_logistic_student_t_heatmap_min_logdf2/best-model-epoch=93-val_loss=0.52.ckpt"
+    - train_min_df: 1
+      checkpoint_path: "checkpoints/multi_task_implicit_learner_logistic_student_t_heatmap_min_logdf1/best-model-epoch=43-val_loss=0.51.ckpt"
+    - train_min_df: 0
+      checkpoint_path: "checkpoints/multi_task_implicit_learner_logistic_student_t_heatmap_min_logdf0/best-model-epoch=48-val_loss=0.48.ckpt"
+    - train_min_df: -1
+      checkpoint_path: "checkpoints/multi_task_implicit_learner_logistic_student_t_heatmap_min_logdf-1/best-model-epoch=79-val_loss=0.42.ckpt"
+    - train_min_df: -2
+      checkpoint_path: "checkpoints/multi_task_implicit_learner_logistic_student_t_heatmap_min_logdf-2/best-model-epoch=90-val_loss=0.39.ckpt"
+    - train_min_df: -3
+      checkpoint_path: "checkpoints/multi_task_implicit_learner_logistic_student_t_heatmap_min_logdf-3/best-model-epoch=96-val_loss=0.35.ckpt"
+
+data:
+  x_dim: 8
+  num_prior_tasks: 20
+  sequence_length: 50
+  context_len: 50
+  num_test_draws: 100
+  num_query_points: 100
+  noise_std: 0.0
+  x_mean: 0.0
+  x_std: 1.0
+  w_mean: 0.0
+  w_std: 1.0
+
+eval:
+  num_bootstraps: 1
+
+baselines:
+  enabled: true
+  # NOTE: mixture baselines will be run row-wise via --mixture_row_id 0..6
+  methods: ["mcmc_oracle", "svi_oracle", "mcmc_hier_t", "svi_hier_t", "mcmc_mixture", "svi_mixture"]
+
+  mcmc:
+    num_thinned: 1000
+    warmup: 1000
+    thinning: 10
+    num_chains: 1
+
+  svi:
+    steps: 1000
+    posterior_samples: 200
+
+  # optional fallback; not used when you pass --mixture_row_id
+  mixture:
+    df_list: [1000000000.0, 20.0]
+
+  hier_t:
+    tau_eps: 1e-3

@@ -1,0 +1,51 @@
+checkpoint_path: "checkpoints/multi_task_implicit_learner_linear_large_-8to8_training/best-model-epoch=83-val_loss=0.28.ckpt"
+out_dir: results/prior_steering_results_linear
+seed: 0
+
+num_bootstraps: 1
+
+test_draws: 1
+
+uncertainty:
+  mode: std        
+  band: 1.0       
+
+target_prior:
+  mean: 0.0
+  std: 1.0
+
+base_prior:
+  name: base (mu=0,std=1)
+  mean: 0.0
+  std: 1.0
+
+steered_priors:
+  - name: mu=2,std=1
+    mean: 2.0
+    std: 1.0
+  - name: mu=4,std=1
+    mean: 4.0
+    std: 1.0
+  - name: mu=6,std=1
+    mean: 6.0
+    std: 1.0
+  - name: mu=8,std=1
+    mean: 8.0
+    std: 1.0
+
+include_no_prior: false
+
+data:
+  x_dim: 8
+  num_prior_tasks: 20
+  sequence_length: 50
+  context_len: 50
+  num_query_points: 200
+
+  # linear noise
+  noise_mean: 0.0
+  noise_std: 0.5
+
+  # x distribution
+  x_mean: 0.0
+  x_std: 1.0

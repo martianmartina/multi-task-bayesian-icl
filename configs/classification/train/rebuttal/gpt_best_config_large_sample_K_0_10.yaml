@@ -1,0 +1,60 @@
+# Experiment settings
+experiment_name: "multi_task_implicit_learner_gpt_best_config_sample_K_0_10_lr3e-4"
+project_name: "mt-icl-classification"
+accelerator: "auto"
+devices: "auto"
+max_epochs: 100
+precision: 16
+
+# Data module settings
+data:
+  _target_: src.data.multi_task_logistic_regression.MultiTaskLogisticDataModule
+  name: "logistic"
+  x_dim: 8
+  num_prior_tasks: 10
+  sample_num_prior_tasks: true
+  min_num_prior_tasks: 0
+  max_num_prior_tasks: 10
+  sequence_length: 50
+  num_train_samples: 10000000
+  num_val_samples: 5000
+  batch_size: 1024
+  num_workers: 4
+  w_mean: 0.0
+  w_std: 1.0
+  w_mean_min: -8.0
+  w_mean_max: 8.0
+  x_mean: 0.0
+  x_std: 1.0
+
+# Model settings
+model:
+  _target_: src.models.multi_task_implicit_model.MultiTaskImplicitInContextLearner
+  model_type: "transformer"
+  x_dim: 8
+  d_model: 128
+  dropout: 0
+  learning_rate: 3e-4
+  nhead: 8
+  num_encoder_layers: 8
+  dim_feedforward: 512
+  gru_hidden_dim: 128
+  gru_num_layers: 2
+  consistency_beta: 0.0
+  task_type: "classification"
+
+# Logger settings
+logger:
+  _target_: pytorch_lightning.loggers.WandbLogger
+  name: ${experiment_name}
+  project: ${project_name}
+  log_model: "all"
+
+# Checkpoint settings
+checkpoint:
+  _target_: pytorch_lightning.callbacks.ModelCheckpoint
+  dirpath: "checkpoints/${experiment_name}"
+  filename: "best-model-{epoch:02d}-{val_loss:.2f}"
+  save_top_k: 3
+  monitor: "val_loss"
+  mode: "min"

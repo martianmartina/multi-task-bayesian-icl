@@ -1,0 +1,56 @@
+# Experiment settings
+experiment_name: "multi_task_implicit_learner_linear_baseline"
+project_name: "mt-icl"
+accelerator: "auto"
+devices: "auto"
+max_epochs: 100
+precision: 16 # Use 16-bit precision for faster training
+
+# Data module settings
+data:
+  _target_: src.data.multi_task_linear.MultiTaskLinearDataModule
+  name: "linear"
+  x_dim: 8
+  num_prior_tasks: 20
+  sequence_length: 50
+  num_train_samples: 10000000
+  num_val_samples: 5000
+  batch_size: 1024
+  num_workers: 4
+  noise_mean: 0.0
+  noise_std: 0.5
+  w_mean: 0.0
+  w_std: 1.0
+  x_mean: 0.0
+  x_std: 1.0
+
+# Model settings
+model:
+  _target_: src.models.multi_task_implicit_model.MultiTaskImplicitInContextLearner
+  model_type: 'transformer' # 'transformer' or 'gru'
+  x_dim: 8
+  d_model: 128
+  dropout: 0
+  learning_rate: 1e-3
+  nhead: 8
+  num_encoder_layers: 8
+  dim_feedforward: 512
+  gru_hidden_dim: 128 # Only used if model_type is 'gru'
+  gru_num_layers: 2    # Only used if model_type is 'gru'
+  consistency_beta: 0.0 # Not used in this model, but part of the signature
+
+# Logger settings
+logger:
+  _target_: pytorch_lightning.loggers.WandbLogger
+  name: ${experiment_name}
+  project: ${project_name}
+  log_model: "all" # 'all', 'false', or 'true'
+
+# Checkpoint settings
+checkpoint:
+  _target_: pytorch_lightning.callbacks.ModelCheckpoint
+  dirpath: "checkpoints/${experiment_name}"
+  filename: "best-model-{epoch:02d}-{val_loss:.2f}"
+  save_top_k: 3
+  monitor: "val_loss"
+  mode: "min"

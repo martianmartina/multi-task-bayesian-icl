@@ -1,0 +1,28 @@
+name: mticl
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pytorch
+  - pytorch-lightning
+  - numpy
+  - matplotlib
+  - seaborn
+  - pyyaml
+  - jupyter
+  - wandb
+  - optuna
+  - tqdm
+  - pandas
+  - xarray
+  - cfgrib
+  - eccodes
+  - scikit-learn
+  - pyro-ppl
+  - pymc
+  - arviz
+  - pip
+  - pip:
+      - rotary-embedding-torch
