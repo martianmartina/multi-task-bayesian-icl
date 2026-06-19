@@ -1,4 +1,10 @@
 # Multi-Task Bayesian ICL
+This is the official implementation for paper:
+
+[**Multi-Task Bayesian In-Context Learning**](https://arxiv.org/abs/2606.20538)
+
+Qingyang Zhu, Eric Karl Oermann, Kyunghyun Cho. (accepted at **ICML 2026**)
+
 **Abstract:** Bayesian predictive inference provides a principled framework for uncertainty quantification, data efficiency, and robust generalization. However, exact inference is often intractable, and scalable approximations may remain computationally expensive or require restrictive modeling assumptions that degrade predictive performance. Prior-Data Fitted and in-context learning networks have recently emerged as an amortized alternative by learning to map datasets directly to predictive distributions, but existing approaches are tightly coupled to the support of the training prior and lack explicit mechanisms for adapting to new priors at test time, resulting in limited robustness under distribution shift. We introduce a multi-task in-context learning framework for amortized hierarchical Bayesian predictive inference that explicitly represents prior information as a prefix of in-context datasets. A transformer trained on sequences of prior and target tasks learns to adapt its predictions across families of priors. On a suite of evaluations with increasing difficulty, including out-of-meta-distribution heavy-tailed priors and priors with high-dimensional latent structures, our method matches oracle Bayesian predictors while being orders of magnitude faster. We further demonstrate its practical relevance on a real-world spatiotemporal temperature prediction benchmark.
 ## Setup
 Create the conda environment:
